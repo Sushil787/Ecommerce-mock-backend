@@ -17,10 +17,9 @@ const user_schema = mongoose.Schema(
       trim: true,
       required: true,
     },
-    phone: {
-      type: Number,
-      trim: true,
-      required: true,
+    isAdmin: {
+      type: Boolean,
+      default: false,
     },
   },
   {
