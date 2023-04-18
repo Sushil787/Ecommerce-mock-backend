@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const userSchema = require("../model/UserModel");
 
 const product_schema = mongoose.Schema(
   {
@@ -18,7 +17,11 @@ const product_schema = mongoose.Schema(
       required: true,
     },
     categories: {
-      type: Array,
+      type: [
+        {
+          type: String,
+        },
+      ],
     },
     price: {
       type: Number,
