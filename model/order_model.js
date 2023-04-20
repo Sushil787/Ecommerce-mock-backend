@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
+
+//note status can be either pending or delivered
 const order_schema = mongoose.Schema(
   {
-    userId: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref:'user' ,
       required: true,
@@ -23,6 +25,7 @@ const order_schema = mongoose.Schema(
     },
     status:{
         type:String,
+        default:"pending",
         
     }
   },

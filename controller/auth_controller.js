@@ -2,7 +2,7 @@ const user = require("../model/user_model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
-const login = async (req, res) => {
+const sign = async (req, res) => {
   const { username, password } = req.body;
   try {
     if (!username || !password) {
@@ -54,6 +54,6 @@ const signup = async (req, res) => {
 };
 
 module.exports = {
-  login,
+  sign,
   signup,
 };
