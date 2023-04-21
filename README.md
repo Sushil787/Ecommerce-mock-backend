@@ -26,7 +26,7 @@ To get started with the application, follow these steps:
 - Node.js: Server-side JavaScript runtime environment.
 - Express: Web application framework for Node.js.
 - MongoDB: NoSQL database for storing application data.
-- Docker: Containering app
+- Docker: containerizing app
 
 ## Contributing
 
