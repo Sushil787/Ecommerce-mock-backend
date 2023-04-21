@@ -5,34 +5,38 @@ const order_schema = mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref:'user' ,
+      ref: "user",
       required: true,
     },
     products: [
       {
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'product',
-        required:true,
-      }
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "product",
+        },
+        quantity: {
+          type: Number,
+          default: 1,
+        },
+      },
     ],
     amount: {
       type: Number,
-      required:true
+      required: true,
     },
     address: {
       type: String,
-      required:true
+      required: true,
     },
-    status:{
-        type:String,
-        default:"pending",
-        
-    }
+    status: {
+      type: String,
+      default: "pending",
+    },
   },
   {
     timeStamps: true,
   }
 );
 
-const order = mongoose.model("product", order_schema);
+const order = mongoose.model("order", order_schema);
 module.exports = order;

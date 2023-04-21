@@ -1,5 +1,6 @@
 const product = require("../model/product_model");
 
+// addming product
 const add_product = async (req, res) => {
   try {
     const { title, image, decs, categories, price } = req.body;
@@ -18,6 +19,8 @@ const add_product = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+// getting all product 
 const get_product = async (req, res) => {
   try {
     const all_product = await product.find({});
@@ -27,6 +30,7 @@ const get_product = async (req, res) => {
   }
 };
 
+// updating product
 const update_product = async (req, res) => {
   try {
     const id = req.params.id;
@@ -42,10 +46,10 @@ const update_product = async (req, res) => {
 
 };
 
+// deleting products
 const delete_product = async (req, res) => {
   try {
     const product_id = req.params.id;
-    console.log(product_id);
    const id = await product.findById({_id:product_id});
     if (!id) {
       return res.status(400).json({ message: "no product with such id"});

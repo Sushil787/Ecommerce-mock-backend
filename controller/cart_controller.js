@@ -15,44 +15,59 @@ const get_cart = async (req, res) => {
         model: "product",
         options: { strictPopulate: false },
       });
-    return res.status(200).json(cart_items);
+      if(cart_items == null){
+        return res.status(200).json([]);
+      }
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
 };
 
-const update_cart = async (req, res) => {
-  try {
-    const user_id = req.id;
-    console.log(user_id);
-    const item = req.body;
-    if (!user_id) {
-      return res.status(400).json({ message: "no id" });
-    }
-    const cart_product = await cart.updateOne(
-      { user: user_id },
-      { $set: { "products.$.quantity": item.quantity } },
-      { new: true }
-    );
-    res.status(200).json(cart_product);
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-};
+// const update_cart = async (req, res) => {
+//   try {
+//     const user_id = req.id;
+//     const item = req.body;
+//     if (!user_id) {
+//       return res.status(400).json({ message: "no id" });
+//     }
+//     const cart_product = await cart.updateOne(
+//       { user: user_id },
+//       { $set: { "products.$.quantity": item.quantity } },
+//       { new: true }
+//     );
+//     res.status(200).json(cart_product);
+//   } catch (error) {
+//     return res.status(500).json({ error: error.message });
+//   }
+// };
 
-const add_cart = async (req, res) => {
+const add_update_cart = async (req, res) => {
   try {
     const user_id = req.id;
-    console.log(user_id);
     const item = req.body;
     if (!user_id) {
       return res.status(400).json({ message: "no id" });
     }
-    const cart_item = await cart.create(
-      { user: user_id, products: item },
-      { new: true }
-    );
-    res.status(200).json(cart_item);
+    const cart_item = await cart.findOne({ user: user_id });
+    if (cart_item === null) {
+      new_cart = await cart.create(
+        { user: user_id, products: [item] },
+        { new: true }
+      );
+
+      return res.status(200).json(new_cart);
+    }
+    for (let i = 0; i < cart_item.products.length; i++) {
+      if (cart_item.products[i].product.toString() == item.product.toString()) {
+        itemFound = true;
+        cart_item.products[i] = item;
+        await cart_item.save();
+        return res.status(200).json(cart_item);
+      }
+    }
+    cart_item.products.push(item);
+    cart_item.save();
+    return res.status(200).json(cart_item);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -65,15 +80,9 @@ const delete_cart = async (req, res) => {
     if (!user_id) {
       return res.status(400).json({ message: "no data" });
     }
-    const updatedCart = await cart.updateOne(
-      { user: user_id },
-      { $pull: { products: { _id: product_id } } },
-      { new: true }
-    );
-    if (!updatedCart) {
-      return res.status(404).json({ error: "cart not found" });
-    }
-    res.status(200).json({ message: "item deleted successfully" });
+    await cart.findOneAndRemove({ user: user_id });
+
+    return res.status(200).json({ message: "succesfully deleted" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -81,8 +90,7 @@ const delete_cart = async (req, res) => {
 
 module.exports = {
   get_cart,
-  update_cart,
-  add_cart,
+  add_update_cart,
   delete_cart,
 };
 
