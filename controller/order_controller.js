@@ -2,7 +2,7 @@ const order = require("../model/order_model");
 
 /**Here get all route is for admin which is be checked via  */
 /**admin will have access to get all order, update order */
-/**for normal user it will have access to */
+/**for normal user it will have access to get their personal order only */
 
 const get_order = async (req, res) => {
   try {
@@ -71,6 +71,7 @@ const add_order = async (req, res) => {
   }
 };
 
+// updating urder by admin
 const update_order = async (req, res) => {
   try {
 
@@ -114,6 +115,7 @@ const update_order = async (req, res) => {
   }
 };
 
+// order can be deleted after delivered.
 // const delete_order = async (req, res) => {
 //   try {
 //     const user_id = req.id;
