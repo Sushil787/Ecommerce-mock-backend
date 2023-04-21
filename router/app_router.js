@@ -4,20 +4,21 @@ const { sign, signup } = require("../controller/auth_controller");
 const {
   get_cart,
   delete_cart,
-  add_update_cart,
+  add_update_cart
 } = require("../controller/cart_controller");
 const {
   get_order,
   add_order,
   update_order,
-  get_all_order,
+  get_all_order
 } = require("../controller/order_controller");
 const {
   add_product,
   get_product,
   update_product,
-  delete_product,
+  delete_product
 } = require("../controller/product_controller");
+const role_check = require("../middleware/role_middleware");
 const app_router = express.Router();
 
 /**  auth route bloc */
@@ -31,14 +32,14 @@ app_router.delete("/cart/:id", auth_middleware, delete_cart);
 
 /** product route bloc */
 app_router.get("/product", auth_middleware, get_product);
-app_router.post("/product", auth_middleware, add_product);
-app_router.put("/product/:id", auth_middleware, update_product);
-app_router.delete("/product/:id", auth_middleware, delete_product);
+app_router.post("/product", auth_middleware, role_check, add_product);
+app_router.put("/product/:id", auth_middleware, role_check, update_product);
+app_router.delete("/product/:id", auth_middleware, role_check, delete_product);
 
 /** order route bloc */
-app_router.get("/order", auth_middleware,get_all_order);
-app_router.get("/order", auth_middleware,get_order);
-app_router.post("/order", auth_middleware,add_order);
-app_router.put("/order", auth_middleware, update_order);
+app_router.get("/order", auth_middleware, role_check, get_all_order);
+app_router.get("/order", auth_middleware, get_order);
+app_router.post("/order", auth_middleware, add_order);
+app_router.put("/order", auth_middleware, role_check, update_order);
 
 module.exports = app_router;

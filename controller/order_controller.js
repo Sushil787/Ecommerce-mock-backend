@@ -39,6 +39,9 @@ const get_all_order = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+
+// for adding order
 const add_order = async (req, res) => {
   try {
     const user_id = req.id;
@@ -46,9 +49,17 @@ const add_order = async (req, res) => {
     if (!user_id || !products || !amount || !address || !status) {
       return res.status(400).json({ message: "no complete data" });
     }
+    const order_itemm = await order.findOne({user:user_id});
+    
+    if(order_itemm){
+      return res.status(200).json({message:"item is already ordered, we will notify you soon"});
+    }
+    console.log("i am here22");
+    
+
     const order_item = await order.create({
       user: user_id,
-      products: [products],
+      products: [...products],
       amount: amount,
       address: address,
       status: status,
@@ -63,27 +74,40 @@ const add_order = async (req, res) => {
 const update_order = async (req, res) => {
   try {
 
-    const {item_id, status} = req.body;
-    if (!item_id) {
+    const {user, status} = req.body;
+    console.log(user, status);
+    if (!user) {
       return res.status(400).json({ message: "no id" });
     }
-    const order_item = await order.find({ _id: item_id });
-    if (order_item === null) {
-      return res.status(200).json({ message: "you have not ordered any item of this type" });
+    const order_item = await order.findOneAndUpdate(
+      { user },
+      { status },
+      { new: true }
+    );
+    if(order){
+      return res.status(200).json(order_item);
+      
+    }else {
+      return res.status(404).json({ error: "Order not found" });
     }
-    order_item.status = status;
-    await order_item.save();
-    return res.status(200).json(order_item);
-    
-    // for (let i = 0; i < order_item.products.length; i++) {
-    //   if (
-    //     order_item.products[i].product.toString() == item.product.toString()
-    //   ) {
-    //     order_item.products[i] = item;
-    //     await order_item.save();
-    //     return res.status(200).json(order_item);
-    //   }
+    // const order_item = await order.find({ user });
+    // console.log(order_item);
+    // if (order_item === null) {
+    //   return res.status(200).json({ message: "you have not ordered any item of this type" });
     // }
+    // order_item.status = status;
+    // await order_item.save();
+    // return res.status(200).json(order_item);
+    
+    // // for (let i = 0; i < order_item.products.length; i++) {
+    // //   if (
+    // //     order_item.products[i].product.toString() == item.product.toString()
+    // //   ) {
+    // //     order_item.products[i] = item;
+    // //     await order_item.save();
+    // //     return res.status(200).json(order_item);
+    // //   }
+    // // }
 
   } catch (error) {
     return res.status(500).json({ error: error.message });
