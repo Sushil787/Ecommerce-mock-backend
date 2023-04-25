@@ -1,26 +1,31 @@
 const express = require("express");
-const auth_middleware = require("../middleware/auth_middleware");
-const { sign, signup } = require("../controller/auth_controller");
+const auth_middleware = require("../../middleware/auth_middleware");
+const { sign, signup } = require("../../controller/auth_controller");
 const {
   get_cart,
   delete_cart,
   add_update_cart
-} = require("../controller/cart_controller");
+} = require("../../controller/cart_controller");
 const {
   get_order,
   add_order,
   update_order,
   get_all_order
-} = require("../controller/order_controller");
+} = require("../../controller/order_controller");
 const {
   add_product,
   get_product,
   update_product,
   delete_product
-} = require("../controller/product_controller");
-const role_check = require("../middleware/role_middleware");
+} = require("../../controller/product_controller");
+const role_check = require("../../middleware/role_middleware");
 const app_router = express.Router();
 
+/**Test API v1.0*/
+app_router.get("/",(req,res)=>{
+  console.log("api v1 called");
+return res.status(200).json({message:"Api verson 1.0"});
+});
 /**  auth route bloc */
 app_router.post("/user/login", sign);
 app_router.post("/user/signup", signup);
