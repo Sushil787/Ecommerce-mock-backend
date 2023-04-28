@@ -1,6 +1,8 @@
 const express = require("express");
 const auth_middleware = require("../../middleware/auth_middleware");
 const { sign, signup } = require("../../controller/auth_controller");
+const logger  = require("../../utils/logger");
+
 const {
   get_cart,
   delete_cart,
@@ -23,8 +25,14 @@ const app_router = express.Router();
 
 /**Test API v1.0*/
 app_router.get("/",(req,res)=>{
-  console.log("api v1 called");
+  try {
+    console.log("api v1 called");
+    logger.info("connection success api v1 called");
 return res.status(200).json({message:"Api verson 1.0"});
+  } catch (e) {
+    logger.error();(e.message);
+    
+ }
 });
 /**  auth route bloc */
 app_router.post("/user/login", sign);
